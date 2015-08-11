@@ -104,4 +104,24 @@ describe("StringBuilder Tests", function(){
 			expect(sb.buffer).to.deep.equal(expected);
 		});
 	});
+	
+	describe("string", function(){
+		it("Retunrs the string values of the buffer", function(){
+			var sb = new StringBuilder();
+			var expected = "hello world"
+			var actual = sb.cat('hello', ' world').string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
+	
+	describe("wrap", function(){
+		it("Prepends prefix and appends suffix", function(){
+			var sb = new StringBuilder();
+			var expected = 'this this hello world that that';
+			var actual = sb.cat(' hello', ' world').wrap('this this', [function(){return ' that';}, [' that']]).string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
 });

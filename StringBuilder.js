@@ -2,6 +2,7 @@
 
 function StringBuilder(){
 	this.buffer = [];
+	this.prefix = false;
 }
 
 StringBuilder.prototype.cat = function(){
@@ -11,7 +12,11 @@ StringBuilder.prototype.cat = function(){
 		}else if (arguments[i] instanceof Array){
 			this.cat.apply(this, arguments[i]);
 		}else{
-			this.buffer.push(arguments[i]);
+			if(this.prefix === false){
+				this.buffer.push(arguments[i]);
+			}else{
+				this.buffer.unshift(arguments[i]);
+			}
 		}
 	}
 	
@@ -44,6 +49,18 @@ StringBuilder.prototype.catIf = function(){
 	if(arguments[arguments.length - 1] === true){
 		this.cat.apply(this, args);
 	}
+	return this;
+};
+
+StringBuilder.prototype.string = function(){
+	return this.buffer.join('');	
+};
+
+StringBuilder.prototype.wrap = function(prefix, suffix){
+	this.prefix = true;
+	this.cat(prefix);
+	this.prefix = false;
+	this.cat(suffix);
 	return this;
 };
 
