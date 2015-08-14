@@ -98,3 +98,20 @@ StringBuilder.prototype.end = function(deep){
 	return this;
 };
 
+StringBuilder.prototype.prefix = function(){
+	if(!arguments.length || arguments.length === 0){
+		return this;
+	}	
+	
+	var args = [];
+	for(var i = 0, length = arguments.length; i < length; i++){
+		args.push(arguments[i]);
+	}
+	
+	this.operationsStack.push({
+		prefix: args
+	});
+	
+	return this;
+}
+

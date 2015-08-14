@@ -158,4 +158,14 @@ describe("StringBuilder Tests", function(){
 			expect(actual).to.equal(expected);
 		});
 	});
+	
+	describe("prefix", function(){
+		it("Adds the prefix to operations", function(){
+			var sb = new StringBuilder();
+			var expected = '1234hello1234world';
+			var actual = sb.prefix('1',['2','3'],function(){return 4;}).cat('hello').cat('world').end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
 });
