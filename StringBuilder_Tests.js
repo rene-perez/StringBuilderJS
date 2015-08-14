@@ -178,4 +178,53 @@ describe("StringBuilder Tests", function(){
 			expect(actual).to.equal(expected);
 		});
 	});
+	
+	describe("each", function(){
+		it("Apply the string builder operations to all the array members", function(){
+			var sb = new StringBuilder();
+			var array = ['hello', 'world'];
+			var expected = 'hello world ';
+			var actual = sb.suffix(' ').each(array, function(element){
+				this.cat(element);
+			}).string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
+	
+	describe("suspend", function(){
+		it("makes to stop current wrap, prefix and suffix operations", function(){
+			var sb = new StringBuilder();
+			var expected = '1hello2world1!2';
+			var actual = sb.prefix('1').suffix('2').cat('hello').suspend().cat('world').end().cat('!').string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
+	
+	describe("when", function(){
+		it("Applies then args when expressions is true", function(){
+			var sb = new StringBuilder();
+			var expected = 'this';
+			var actual = sb.when(true, 'this', 'not this').string();
+			
+			expect(actual).to.equal(expected);
+		});
+		
+		it("Applies otherwise args when expressions is false", function(){
+			var sb = new StringBuilder();
+			var expected = 'this';
+			var actual = sb.when(false, 'not this', 'this').string();
+			
+			expect(actual).to.equal(expected);
+		});
+		
+		it("If expression is a function it evaluates it", function(){
+			var sb = new StringBuilder();
+			var expected = 'this';
+			var actual = sb.when(function(){return false;}, 'not this', 'this').string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
 });

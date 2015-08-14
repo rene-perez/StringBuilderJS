@@ -8,11 +8,17 @@ function StringBuilder(){
 StringBuilder.prototype.cat = function(){
 	
 	var prefixSb = new StringBuilder();
-	this.operationsStack.each(function(element){
+	var lastOperation = this.operationsStack.last();
+	var element;
+	for(var k = 0, length = this.operationsStack.length; k < length; k++){
+		if(lastOperation && lastOperation.suspend){
+			break;
+		}
+		element = this.operationsStack[k];
 		if(element.prefix){
 			prefixSb.cat(element.prefix);
 		}
-	});	
+	}
 	
 	var that = this;
 	prefixSb.buffer.each(function(element){
@@ -32,8 +38,12 @@ StringBuilder.prototype.cat = function(){
 	var suffixSb = new StringBuilder();
 	for(var j = this.operationsStack.length - 1; j >= 0; j--)
 	{
-		if(this.operationsStack[j].suffix){
-			suffixSb.cat(this.operationsStack[j].suffix);
+		if(lastOperation && lastOperation.suspend){
+			break;
+		}
+		element = this.operationsStack[j];
+		if(element.suffix){
+			suffixSb.cat(element.suffix);
 		}
 	}
 	suffixSb.buffer.each(function(element){
@@ -113,7 +123,7 @@ StringBuilder.prototype.prefix = function(){
 	});
 	
 	return this;
-}
+};
 
 StringBuilder.prototype.suffix = function(){
 	if(!arguments.length || arguments.length === 0){
@@ -130,4 +140,31 @@ StringBuilder.prototype.suffix = function(){
 	});
 	
 	return this;
-}
+};
+
+StringBuilder.prototype.each = function(array, callback){
+	for(var i = 0, length = array.length; i < length; i++){
+		callback.call(this, array[i], i, array);
+	}
+	
+	return this;
+};
+
+StringBuilder.prototype.suspend = function(){
+	this.operationsStack.push({
+		suspend: true
+	});
+	
+	return this;
+};
+
+StringBuilder.prototype.when = function(expression, thenArgs, otherwiseArgs){
+	expression = expression instanceof Function ? expression() : expression;
+	if(expression === true){
+		this.cat(thenArgs);
+	}else{
+		this.cat(otherwiseArgs);
+	}
+	
+	return this;	
+};
