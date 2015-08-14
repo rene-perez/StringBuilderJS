@@ -118,8 +118,42 @@ describe("StringBuilder Tests", function(){
 	describe("wrap", function(){
 		it("Prepends prefix and appends suffix", function(){
 			var sb = new StringBuilder();
-			var expected = 'this this hello world that that';
-			var actual = sb.cat(' hello', ' world').wrap('this this', [function(){return ' that';}, [' that']]).string();
+			var expected = '1ahellob21aworldb2';
+			var actual = sb.wrap('1', '2').wrap('a','b').cat('hello').cat('world').end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+		
+		it("Works with functions and arrays", function(){
+			var sb = new StringBuilder();
+			var expected = '0helloab1helloab2helloab';
+			var actual = sb.wrap(function(){var count =0; return function(){return count++;}}(), ['a', 'b']).rep('hello',3).end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
+	
+	describe("end", function(){
+		it("without deep specified", function(){
+			var sb = new StringBuilder();
+			var expected = '1ahellob21world2';
+			var actual = sb.wrap('1', '2').wrap('a','b').cat('hello').end().cat('world').end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+		
+		it("with deep greather than operations count", function(){
+			var sb = new StringBuilder();
+			var expected = '1ahellob2world';
+			var actual = sb.wrap('1', '2').wrap('a','b').cat('hello').end(4).cat('world').end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+		
+		it("with deep lower than operations count", function(){
+			var sb = new StringBuilder();
+			var expected = '1axhelloyb21world2';
+			var actual = sb.wrap('1', '2').wrap('a','b').wrap('x', 'y').cat('hello').end(2).cat('world').end().string();
 			
 			expect(actual).to.equal(expected);
 		});
