@@ -168,4 +168,14 @@ describe("StringBuilder Tests", function(){
 			expect(actual).to.equal(expected);
 		});
 	});
+	
+	describe("suffix", function(){
+		it("Adds the suffix to operations", function(){
+			var sb = new StringBuilder();
+			var expected = 'hello1234world1234';
+			var actual = sb.suffix('1',['2','3'],function(){return 4;}).cat('hello').cat('world').end().string();
+			
+			expect(actual).to.equal(expected);
+		});
+	});
 });

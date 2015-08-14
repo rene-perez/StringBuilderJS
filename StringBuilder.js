@@ -115,3 +115,19 @@ StringBuilder.prototype.prefix = function(){
 	return this;
 }
 
+StringBuilder.prototype.suffix = function(){
+	if(!arguments.length || arguments.length === 0){
+		return this;
+	}	
+	
+	var args = [];
+	for(var i = 0, length = arguments.length; i < length; i++){
+		args.push(arguments[i]);
+	}
+	
+	this.operationsStack.push({
+		suffix: args
+	});
+	
+	return this;
+}
